@@ -24,6 +24,12 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
+                <!-- Update this helper link inside your login.blade.php file -->
+        <div class="switch-text">
+            Don't have an account? <a href="{{ route('register') }}">Register here</a>
+        </div>
+
+
         <!-- Remember Me -->
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
