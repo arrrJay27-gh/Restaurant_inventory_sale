@@ -1,18 +1,3 @@
-@php
-use App\Models\Item;
-use App\Models\MenuItem;
-use App\Models\Sale;
-use App\Models\Supplier;
-use App\Models\WasteLog;
-
-$totalItems = Item::count();
-$totalMenuItems = MenuItem::count();
-$totalSales = Sale::count();
-$totalSuppliers = Supplier::count();
-$totalWaste = WasteLog::count();
-$lowStock = Item::whereColumn('current_stock', '<', 'min_stock')->count();
-@endphp
-
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">

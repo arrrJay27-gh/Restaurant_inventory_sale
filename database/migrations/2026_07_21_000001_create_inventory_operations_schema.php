@@ -170,7 +170,7 @@ class CreateInventoryOperationsSchema extends Migration
         if (! Schema::hasTable('po_items')) {
             Schema::create('po_items', function (Blueprint $table) {
                 $table->id();
-                $table->foreignId('po_id')->constrained()->cascadeOnDelete();
+                $table->foreignId('po_id')->constrained('purchase_orders')->cascadeOnDelete();
                 $table->foreignId('item_id')->constrained()->cascadeOnDelete();
                 $table->decimal('quantity_ordered', 10, 3);
                 $table->decimal('unit_cost', 10, 2);

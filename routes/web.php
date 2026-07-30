@@ -2,13 +2,32 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Ingredient;
+use App\Models\MenuItem;
+use App\Models\Sale;
+use App\Models\Supplier;
+use App\Models\WasteLog;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $totalItems = Ingredient::count();
+    $totalMenuItems = MenuItem::count();
+    $totalSales = Sale::count();
+    $totalSuppliers = Supplier::count();
+    $totalWaste = WasteLog::count();
+    $lowStock = Ingredient::whereColumn('current_stock', '<', 'min_stock')->count();
+
+    return view('dashboard', compact(
+        'totalItems', 
+        'totalMenuItems', 
+        'totalSales', 
+        'totalSuppliers', 
+        'totalWaste', 
+        'lowStock'
+    ));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
