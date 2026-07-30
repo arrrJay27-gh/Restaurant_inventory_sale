@@ -12,19 +12,18 @@
         <link href="https://bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <!-- GLOBAL SIDEBAR CONTROLLER: Naka-set na 'true' para bukas ang sidebar sa simula -->
     <body x-data="{ open: true }" class="font-sans antialiased bg-slate-50 text-slate-900" style="margin: 0; padding: 0;">
         
-        <!-- FLEX CONTAINER: Natural na magkatabi ang Sidebar at ang Content block nang walang patong -->
+        <!-- MAIN ROW WINDOW GRID WRAPPER -->
         <div class="min-h-screen flex flex-row w-full items-start overflow-x-hidden">
             
-            <!-- Kasama ang ating collapsible sidebar component navigation -->
+            <!-- Kasama ang layout structure ng ating bago at ultra-spacious collapsible sidebar -->
             @include('layouts.navigation')
 
-            <!-- MAIN WORKSPACE: `flex-1` at `min-w-0` ang pumupwersa sa dashboard na mag-adjust kusa sa natitirang space sa kanan -->
+            <!-- DYNAMIC SIDE CONTENT ZONE -->
             <div class="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto transition-all duration-300">
                 
-                <!-- Main Dashboard Template Header -->
+                <!-- Main Layout Header Title Bar -->
                 @if (isset($header))
                     <header class="bg-white border-b border-slate-200 flex-shrink-0">
                         <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
@@ -33,7 +32,7 @@
                     </header>
                 @endif
 
-                <!-- Dynamic Dashboard Content Slots -->
+                <!-- Content Body Slot Canvas Container -->
                 <main class="flex-1 w-full max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $slot }}
                 </main>
