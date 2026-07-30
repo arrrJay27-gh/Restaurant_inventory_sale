@@ -1,77 +1,85 @@
-<nav class="bg-white border-r border-gray-200 fixed inset-y-0 left-0 w-64 hidden md:block">
-    <div class="h-full px-4 py-6 overflow-y-auto">
-        <div class="flex items-center mb-8">
-            <a href="{{ route('dashboard') }}" class="flex items-center space-x-3">
-                <x-application-logo class="h-8 w-auto text-gray-800" />
-                <span class="text-lg font-semibold text-gray-900">{{ config('app.name', 'Inventory') }}</span>
+<!-- TOP BAR: Sapilitang naka-lock gamit ang inline CSS para hindi kailanman sumama sa scroll -->
+<nav x-data="{ open: false }" 
+     class="bg-white border-b border-gray-200 z-50 shadow-sm" 
+     style="position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; height: 64px !important;">
+    
+    <div class="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between" style="height: 100%;">
+        
+        <!-- KALIWANG BAHAGI: Hamburger Button at Logo -->
+        <div class="flex items-center space-x-4">
+            <!-- Hamburger Toggle Button -->
+            <button @click="open = !open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none transition">
+                <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                    <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <!-- Brand Logo at Pangalan -->
+            <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
+                <x-application-logo class="h-6 w-auto text-violet-600" />
+                <span class="text-sm font-bold text-gray-900 tracking-tight">{{ config('app.name', 'Laravel') }}</span>
             </a>
         </div>
 
-        <div class="space-y-2">
-            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">{{ __('Dashboard') }}</x-nav-link>
-            <x-nav-link :href="route('items.index')" :active="request()->routeIs('items.*')">{{ __('Inventory') }}</x-nav-link>
-            <x-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')">{{ __('Suppliers') }}</x-nav-link>
-            <x-nav-link :href="route('purchase-orders.index')" :active="request()->routeIs('purchase-orders.*')">{{ __('Purchase Orders') }}</x-nav-link>
-            <x-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.*')">{{ __('Sales') }}</x-nav-link>
-            <x-nav-link :href="route('waste-logs.create')" :active="request()->routeIs('waste-logs.*')">{{ __('Waste Logs') }}</x-nav-link>
-        </div>
-
-        <div class="mt-8 border-t pt-4">
-            <div class="text-sm text-gray-600">{{ Auth::user()->name }}</div>
-            <div class="text-xs text-gray-500">{{ Auth::user()->email }}</div>
-            <div class="mt-3">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Log Out') }}</x-dropdown-link>
-                </form>
-            </div>
+        <!-- KANANG BAHAGI: Pangalan ng User -->
+        <div class="text-right hidden sm:block">
+            <p class="text-xs font-semibold text-gray-800 leading-none" style="margin: 0;">{{ Auth::user()->name }}</p>
+            <p class="text-[10px] text-gray-400 mt-1 leading-none" style="margin: 4px 0 0 0;">Inventory Manager</p>
         </div>
     </div>
-</nav>
 
-<!-- Mobile top nav -->
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 md:hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex items-center">
-                <button @click="open = !open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+    <!-- DROPDOWN BOX: Nakaposisyon nang tama sa ilalim ng fixed header -->
+    <div x-show="open" 
+         x-transition:enter="transition ease-out duration-100"
+         x-transition:enter-start="transform opacity-0 scale-95"
+         x-transition:enter-end="transform opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-75"
+         x-transition:leave-start="transform opacity-100 scale-100"
+         x-transition:leave-end="transform opacity-0 scale-95"
+         @click.away="open = false" 
+         class="bg-white border border-gray-200 rounded-lg shadow-xl py-2 z-50"
+         style="position: absolute !important; top: 64px !important; left: 16px !important; w-64; width: 240px;">
+        
+        <!-- Lahat ng Links sa Loob ng Hamburger -->
+        <div class="space-y-0.5 px-2">
+            <a href="{{ route('dashboard') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition {{ request()->routeIs('dashboard') ? 'bg-violet-50 text-violet-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                {{ __('Dashboard') }}
+            </a>
+
+            <a href="/items" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition {{ request()->is('items*') ? 'bg-violet-50 text-violet-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                {{ __('Inventory') }}
+            </a>
+
+            <a href="/suppliers" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition {{ request()->is('suppliers*') ? 'bg-violet-50 text-violet-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                {{ __('Suppliers') }}
+            </a>
+
+            <a href="/stocks" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition {{ request()->is('stocks*') ? 'bg-violet-50 text-violet-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                {{ __('Stocks') }}
+            </a>
+
+            <a href="/purchase-orders" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition {{ request()->is('purchase-orders*') ? 'bg-violet-50 text-violet-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                {{ __('Purchase Orders') }}
+            </a>
+
+            <a href="/sales" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition {{ request()->is('sales*') ? 'bg-violet-50 text-violet-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                {{ __('Sales') }}
+            </a>
+
+            <a href="/waste-logs/create" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition {{ request()->is('waste-logs*') ? 'bg-violet-50 text-violet-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                {{ __('Waste Logs') }}
+            </a>
+        </div>
+
+        <!-- Logout Trigger sa Loob ng Hamburger Dropdown -->
+        <div class="mt-2 pt-2 border-t border-gray-100 px-4 bg-gray-50/50 rounded-b-lg">
+            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                @csrf
+                <button type="submit" class="w-full text-left text-xs font-semibold text-red-600 hover:text-red-700 transition">
+                    {{ __('Log Out') }}
                 </button>
-                <a href="{{ route('dashboard') }}" class="ms-3 flex items-center">
-                    <x-application-logo class="h-8 w-auto" />
-                </a>
-            </div>
-
-            <div class="flex items-center">
-                <div class="text-sm text-gray-600">{{ Auth::user()->name }}</div>
-            </div>
-        </div>
-    </div>
-
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">{{ __('Dashboard') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('items.index')" :active="request()->routeIs('items.*')">{{ __('Inventory') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')">{{ __('Suppliers') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('purchase-orders.index')" :active="request()->routeIs('purchase-orders.*')">{{ __('Purchase Orders') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.*')">{{ __('Sales') }}</x-responsive-nav-link>
-        </div>
-
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">{{ __('Profile') }}</x-responsive-nav-link>
-                <form method="POST" action="{{ route('logout') }}">@csrf
-                    <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Log Out') }}</x-responsive-nav-link>
-                </form>
-            </div>
+            </form>
         </div>
     </div>
 </nav>

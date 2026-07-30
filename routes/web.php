@@ -20,10 +20,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Secure system dashboard entry
+use Illuminate\Support\Facades\DB;
+
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    // Kukunin ang kabuuang suma ng total_amount mula sa sales table. 
+    // Kung walang benta, gagawin itong 0.
+    $totalRevenue = DB::table('sales')->sum('total_amount') ?? 0;
+    
+    // Kukunin ang kabuuang bilang ng mga transaksyon sa sales table.
+    $totalSales = DB::table('sales')->count();
+
+    // Ipapasa ang mga variable papunta sa iyong dashboard blade file
+    return view('dashboard', compact('totalRevenue', 'totalSales'));
 })->middleware(['auth', 'verified'])->name('dashboard');
+
 
 // Secure User Account Profile Settings Management
 Route::middleware('auth')->group(function () {

@@ -7,32 +7,38 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
+        <!-- Fonts & Scripts -->
+        <link rel="preconnect" href="https://bunny.net">
+        <link href="https://bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+    <body class="font-sans antialiased bg-slate-50 text-slate-900" style="margin: 0; padding: 0;">
+        
+        <div class="min-h-screen flex flex-col">
+            
+            <!-- Kasama ang top fixed header navigation block -->
             @include('layouts.navigation')
 
-            <div class="md:pl-64">
-                <!-- Page Heading -->
-                @isset($header)
-                    <header class="bg-white shadow">
-                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <!-- CONTENT ZONE: Gumamit ng explicit padding-top na 64px para sa static wrapper body layout -->
+            <div class="w-full flex-1 flex flex-col" style="padding-top: 64px !important;">
+                
+                <!-- Page Breadcrumb Title Block Header -->
+                @if (isset($header))
+                    <header class="bg-white border-b border-slate-200">
+                        <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
                             {{ $header }}
                         </div>
                     </header>
-                @endisset
+                @endif
 
-                <!-- Page Content -->
-                <main>
+                <!-- Main Frame Grid Dynamic Slot View -->
+                <main class="flex-1 w-full max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $slot }}
                 </main>
+                
             </div>
+
         </div>
+
     </body>
 </html>
