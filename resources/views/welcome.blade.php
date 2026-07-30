@@ -187,7 +187,7 @@
         .image-card img {
             width: 100%;
             height: 460px;
-            object-cover: cover;
+            object-fit: cover; /* Fixed: Corrected standard CSS property from object-cover */
             border-radius: 20px;
             display: block;
         }
@@ -254,7 +254,13 @@
             <a href="#">Contact Us</a>
         </nav>
         <div>
-            <a href="#" class="btn-contact">Login</a>
+            @if (Route::has('login'))
+                @auth
+                    <a href="{{ url('/dashboard') }}" class="btn-contact">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="btn-contact">Login</a>
+                @endauth
+            @endif
         </div>
     </header>
 
@@ -265,16 +271,20 @@
             <h1 class="title-light">Are you Hungry?</h1>
             <h2 class="title-bold">What are you waiting<br>for?</h2>
             <p class="sub-text">taste our best <span>Flavours</span></p>
-            <a href="#" class="btn-order">Order Now</a>
+            
+            @auth
+                <a href="{{ url('/dashboard') }}" class="btn-order">Go to Dashboard</a>
+            @else
+                <a href="{{ route('register') }}" class="btn-order">Order Now</a>
+            @endauth
         </div>
 
         <!-- Right Side Media Banner Area -->
         <div class="hero-right">
             <div class="green-shape"></div>
             <div class="image-card">
-                <!-- Using a stable, high-quality public food asset URL -->
+                <!-- Points to your local image in the public folder -->
                 <img src="{{ asset('salad.webp') }}" alt="Fresh Healthy Salad Bowl Selection">
-
             </div>
         </div>
     </main>
