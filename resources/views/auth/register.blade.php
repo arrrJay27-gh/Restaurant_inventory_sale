@@ -32,11 +32,11 @@
             @csrf
             <div class="form-group">
                 <label>Full Name</label>
-                <input type="text" name="name" required placeholder="John Doe">
+                <input type="text" name="name" required placeholder="your name">
             </div>
             <div class="form-group">
                 <label>Email Address</label>
-                <input type="email" name="email" required placeholder="name@example.com">
+                <input type="email" name="email" required placeholder="name@gmail.com">
             </div>
             <div class="form-group">
                 <label>Password</label>
