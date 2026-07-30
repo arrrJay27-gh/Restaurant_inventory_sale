@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PurchaseOrderItem extends Model
 {
+    protected $table = 'po_items';
+
     protected $fillable = ['po_id', 'item_id', 'quantity_ordered', 'unit_cost'];
 
     public function purchaseOrder(): BelongsTo

@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\PurchaseOrderController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\WasteLogController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
