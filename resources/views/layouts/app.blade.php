@@ -12,17 +12,19 @@
         <link href="https://bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-slate-50 text-slate-900" style="margin: 0; padding: 0;">
+    <!-- GLOBAL SIDEBAR CONTROLLER: Naka-set na 'true' para bukas ang sidebar sa simula -->
+    <body x-data="{ open: true }" class="font-sans antialiased bg-slate-50 text-slate-900" style="margin: 0; padding: 0;">
         
-        <div class="min-h-screen flex flex-col">
+        <div class="min-h-screen flex flex-row w-full">
             
-            <!-- Kasama ang top fixed header navigation block -->
+            <!-- Kasama ang ating orihinal at collapsible sidebar navigation -->
             @include('layouts.navigation')
 
-            <!-- CONTENT ZONE: Gumamit ng explicit padding-top na 64px para sa static wrapper body layout -->
-            <div class="w-full flex-1 flex flex-col" style="padding-top: 64px !important;">
+            <!-- DYNAMIC WORKSPACE WRAPPER: Kusa nitong binabago ang margin-left base sa lapad ng sidebar sa lahat ng screen size -->
+            <div class="flex-1 flex flex-col min-w-0 transition-all duration-300"
+                 :class="open ? 'ml-64' : 'ml-20'">
                 
-                <!-- Page Breadcrumb Title Block Header -->
+                <!-- Main Dashboard Template Header -->
                 @if (isset($header))
                     <header class="bg-white border-b border-slate-200">
                         <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
@@ -31,7 +33,7 @@
                     </header>
                 @endif
 
-                <!-- Main Frame Grid Dynamic Slot View -->
+                <!-- Dynamic Dashboard Content Slots -->
                 <main class="flex-1 w-full max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $slot }}
                 </main>
