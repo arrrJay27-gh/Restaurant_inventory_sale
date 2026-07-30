@@ -28,7 +28,7 @@
         
         <!-- SIDEBAR NAVIGATION MENU LINKS: Sapilitang nilagyan ng 12px margin separation gap sa bawat a-tag block -->
         <nav class="flex-1 overflow-y-auto overflow-x-hidden pr-1" style="display: flex; flex-direction: column;">
-            
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-4 mt-4 mb-2">Supply Chain</p>
             <a href="{{ route('dashboard') }}" 
                class="flex items-center text-sm font-bold rounded-xl transition-all {{ request()->routeIs('dashboard') ? 'bg-violet-600 text-white shadow-lg shadow-violet-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" 
                :class="open ? 'justify-start space-x-4' : 'justify-center'"
@@ -42,7 +42,7 @@
                :class="open ? 'justify-start space-x-4' : 'justify-center'"
                style="padding: 14px 18px; margin-bottom: 12px; border-width: 1px; border-color: transparent;">
                 <span class="text-xl flex-shrink-0" style="display: inline-block; line-height: 1;">📦</span>
-                <span x-show="open" style="white-space: nowrap;">{{ __('Inventory') }}</span>
+                <span x-show="open" style="white-space: nowrap;">{{ __('Raw Ingredients') }}</span>
             </a>
 
             <a href="/suppliers" 
