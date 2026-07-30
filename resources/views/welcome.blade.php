@@ -273,7 +273,8 @@
             <div class="green-shape"></div>
             <div class="image-card">
                 <!-- Using a stable, high-quality public food asset URL -->
-                <img src="https://unsplash.com" alt="Fresh Healthy Salad Bowl Selection">
+                <img src="{{ asset('salad.webp') }}" alt="Fresh Healthy Salad Bowl Selection">
+
             </div>
         </div>
     </main>
