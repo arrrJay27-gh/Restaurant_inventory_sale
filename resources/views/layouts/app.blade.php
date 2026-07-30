@@ -15,18 +15,18 @@
     <!-- GLOBAL SIDEBAR CONTROLLER: Naka-set na 'true' para bukas ang sidebar sa simula -->
     <body x-data="{ open: true }" class="font-sans antialiased bg-slate-50 text-slate-900" style="margin: 0; padding: 0;">
         
-        <div class="min-h-screen flex flex-row w-full">
+        <!-- FLEX CONTAINER: Natural na magkatabi ang Sidebar at ang Content block nang walang patong -->
+        <div class="min-h-screen flex flex-row w-full items-start overflow-x-hidden">
             
-            <!-- Kasama ang ating orihinal at collapsible sidebar navigation -->
+            <!-- Kasama ang ating collapsible sidebar component navigation -->
             @include('layouts.navigation')
 
-            <!-- DYNAMIC WORKSPACE WRAPPER: Kusa nitong binabago ang margin-left base sa lapad ng sidebar sa lahat ng screen size -->
-            <div class="flex-1 flex flex-col min-w-0 transition-all duration-300"
-                 :class="open ? 'ml-64' : 'ml-20'">
+            <!-- MAIN WORKSPACE: `flex-1` at `min-w-0` ang pumupwersa sa dashboard na mag-adjust kusa sa natitirang space sa kanan -->
+            <div class="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto transition-all duration-300">
                 
                 <!-- Main Dashboard Template Header -->
                 @if (isset($header))
-                    <header class="bg-white border-b border-slate-200">
+                    <header class="bg-white border-b border-slate-200 flex-shrink-0">
                         <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
                             {{ $header }}
                         </div>

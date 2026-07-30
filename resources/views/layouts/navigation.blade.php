@@ -1,11 +1,11 @@
-<!-- PERMANENT COLLAPSIBLE SIDEBAR: Lalabas sa kahit anong sukat ng screen at naka-lock laban sa scroll -->
+<!-- PERMANENT COLLAPSIBLE SIDEBAR: Sticky flex structure para nakatabi lang sa dashboard naturally -->
 <aside :class="open ? 'w-64' : 'w-20'" 
-       class="bg-white border-r border-gray-200 flex flex-col justify-between fixed top-0 bottom-0 left-0 z-40 transition-all duration-300 shadow-sm">
+       class="bg-white border-r border-gray-200 flex flex-col justify-between h-screen sticky top-0 left-0 z-40 transition-all duration-300 flex-shrink-0 shadow-sm">
     
     <div class="px-3 py-5 flex-1 flex flex-col min-h-0">
         <!-- SIDEBAR HEADER: Switch toggle button at App Logo -->
         <div class="flex items-center mb-8 px-2 flex-shrink-0" :class="open ? 'justify-between' : 'justify-center'">
-            <div class="flex items-center space-x-2.5" x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0">
+            <div class="flex items-center space-x-2.5" x-show="open" x-transition:enter="transition ease-out duration-200">
                 <x-application-logo class="h-6 w-auto text-violet-600" />
                 <span class="text-sm font-bold text-gray-900 tracking-tight" style="white-space: nowrap;">
                     {{ config('app.name', 'Laravel') }}
@@ -22,37 +22,37 @@
         
         <!-- SIDEBAR NAVIGATION MENU LINKS (May mga kasamang visual emojis/icons) -->
         <nav class="space-y-1.5 flex-1 overflow-y-auto overflow-x-hidden pr-1">
-            <a href="{{ route('dashboard') }}" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->routeIs('dashboard') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
+            <a href="{{ route('dashboard') }}" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->routeIs('dashboard') ? 'bg-violet-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
                 <span class="text-lg flex-shrink-0">📊</span>
                 <span x-show="open" style="white-space: nowrap;">{{ __('Dashboard') }}</span>
             </a>
 
-            <a href="/items" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('items*') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
+            <a href="/items" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('items*') ? 'bg-violet-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
                 <span class="text-lg flex-shrink-0">📦</span>
                 <span x-show="open" style="white-space: nowrap;">{{ __('Inventory') }}</span>
             </a>
 
-            <a href="/suppliers" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('suppliers*') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
+            <a href="/suppliers" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('suppliers*') ? 'bg-violet-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
                 <span class="text-lg flex-shrink-0">🤝</span>
                 <span x-show="open" style="white-space: nowrap;">{{ __('Suppliers') }}</span>
             </a>
 
-            <a href="/stocks" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('stocks*') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
+            <a href="/stocks" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('stocks*') ? 'bg-violet-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
                 <span class="text-lg flex-shrink-0">📈</span>
                 <span x-show="open" style="white-space: nowrap;">{{ __('Stocks') }}</span>
             </a>
 
-            <a href="/purchase-orders" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('purchase-orders*') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
+            <a href="/purchase-orders" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('purchase-orders*') ? 'bg-violet-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
                 <span class="text-lg flex-shrink-0">📜</span>
-                <span x-show="open" style="white-space: nowrap;">{{ __('Orders') }}</span>
+                <span x-show="open" style="white-space: nowrap;">{{ __('Purchase Orders') }}</span>
             </a>
 
-            <a href="/sales" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('sales*') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
+            <a href="/sales" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('sales*') ? 'bg-violet-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
                 <span class="text-lg flex-shrink-0">💰</span>
                 <span x-show="open" style="white-space: nowrap;">{{ __('Sales') }}</span>
             </a>
 
-            <a href="/waste-logs/create" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('waste-logs*') ? 'bg-violet-600 text-white shadow-md shadow-violet-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
+            <a href="/waste-logs/create" class="flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all {{ request()->is('waste-logs*') ? 'bg-violet-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" :class="open ? 'justify-start space-x-3' : 'justify-center'">
                 <span class="text-lg flex-shrink-0">🗑️</span>
                 <span x-show="open" style="white-space: nowrap;">{{ __('Waste Logs') }}</span>
             </a>
