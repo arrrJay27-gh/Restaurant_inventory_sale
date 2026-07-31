@@ -33,6 +33,9 @@
                 <span class="text-xl flex-shrink-0" style="display: inline-block; line-height: 1;">📊</span>
                 <span x-show="open" style="white-space: nowrap;">{{ __('Dashboard') }}</span>
             </a>
+            <a href="{{ route('pos.dashboard') }}" class="flex items-center space-x-2 text-gray-700 hover:text-indigo-600">
+    <span>📊 POS Dashboard</span>
+</a>
 
             <a href="/items" 
                class="flex items-center text-sm font-bold rounded-xl transition-all {{ request()->is('items*') ? 'bg-violet-600 text-white shadow-lg shadow-violet-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}" 

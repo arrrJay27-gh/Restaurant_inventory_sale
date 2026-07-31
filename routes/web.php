@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PurchaseOrderController;
@@ -7,7 +9,8 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WasteLogController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PosDashboardController;
+use App\Http\Controllers\PosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,32 +18,32 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Your custom restaurant landing page design
+// Public / Landing Page
 Route::get('/', function () {
     return view('welcome');
 });
 
-use Illuminate\Support\Facades\DB;
+// Authenticated Routes Group
+Route::middleware(['auth', 'verified'])->group(function () {
 
-Route::get('/dashboard', function () {
-    // Kukunin ang kabuuang suma ng total_amount mula sa sales table. 
-    // Kung walang benta, gagawin itong 0.
-    $totalRevenue = DB::table('sales')->sum('total_amount') ?? 0;
-    
-    // Kukunin ang kabuuang bilang ng mga transaksyon sa sales table.
-    $totalSales = DB::table('sales')->count();
+    // Main Dashboard Route
+    Route::get('/dashboard', function () {
+        $totalRevenue = DB::table('sales')->sum('total_amount') ?? 0;
+        $totalSales = DB::table('sales')->count();
 
-    // Ipapasa ang mga variable papunta sa iyong dashboard blade file
-    return view('dashboard', compact('totalRevenue', 'totalSales'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+        return view('dashboard', compact('totalRevenue', 'totalSales'));
+    })->name('dashboard');
 
+    // POS Routes
+    Route::get('/pos', [PosController::class, 'index'])->name('pos.index'); // <-- Idinagdag para sa Open POS Register
+    Route::get('/pos/dashboard', [PosDashboardController::class, 'index'])->name('pos.dashboard');
 
-// Secure User Account Profile Settings Management
-Route::middleware('auth')->group(function () {
+    // Profile Management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
 
-// CRITICAL: This line automatically handles all Login, Logout, and Register pages securely via Breeze!
+// Authentication Routes (Breeze)
 require __DIR__.'/auth.php';
