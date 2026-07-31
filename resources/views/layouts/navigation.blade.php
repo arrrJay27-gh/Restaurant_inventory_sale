@@ -1,12 +1,9 @@
-<!-- PERMANENT COLLAPSIBLE SIDEBAR: Explicit layout pixels para maluwag at hindi kailanman mag-siksikan -->
 <aside :class="open ? 'w-80' : 'w-24'" 
        class="bg-white border-r border-gray-200 flex flex-col justify-between h-screen sticky top-0 left-0 z-40 transition-all duration-300 flex-shrink-0 shadow-sm"
        style="box-sizing: border-box;">
     
-    <!-- TOP CONTENT SEGMENT -->
     <div class="flex-1 flex flex-col min-h-0" style="padding: 28px 16px 16px 16px;">
         
-        <!-- SIDEBAR HEADER: Branding logo at toggle button with extra breathing space -->
         <div class="flex items-center flex-shrink-0" 
              :class="open ? 'justify-between' : 'justify-center'" 
              style="margin-bottom: 44px; padding-left: 8px; padding-right: 8px;">

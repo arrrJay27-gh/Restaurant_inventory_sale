@@ -14,16 +14,14 @@
     </head>
     <body x-data="{ open: true }" class="font-sans antialiased bg-slate-50 text-slate-900" style="margin: 0; padding: 0;">
         
-        <!-- MAIN ROW WINDOW GRID WRAPPER -->
+       
         <div class="min-h-screen flex flex-row w-full items-start overflow-x-hidden">
             
-            <!-- Kasama ang layout structure ng ating bago at ultra-spacious collapsible sidebar -->
+            
             @include('layouts.navigation')
 
-            <!-- DYNAMIC SIDE CONTENT ZONE -->
             <div class="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto transition-all duration-300">
                 
-                <!-- Main Layout Header Title Bar -->
                 @if (isset($header))
                     <header class="bg-white border-b border-slate-200 flex-shrink-0">
                         <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
@@ -32,7 +30,6 @@
                     </header>
                 @endif
 
-                <!-- Content Body Slot Canvas Container -->
                 <main class="flex-1 w-full max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $slot }}
                 </main>
