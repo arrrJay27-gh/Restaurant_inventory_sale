@@ -9,11 +9,6 @@
 
         <div class="space-y-2">
             <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">{{ __('Dashboard') }}</x-nav-link>
-            <x-nav-link :href="route('items.index')" :active="request()->routeIs('items.*')">{{ __('Inventory') }}</x-nav-link>
-            <x-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')">{{ __('Suppliers') }}</x-nav-link>
-            <x-nav-link :href="route('purchase-orders.index')" :active="request()->routeIs('purchase-orders.*')">{{ __('Purchase Orders') }}</x-nav-link>
-            <x-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.*')">{{ __('Sales') }}</x-nav-link>
-            <x-nav-link :href="route('waste-logs.create')" :active="request()->routeIs('waste-logs.*')">{{ __('Waste Logs') }}</x-nav-link>
         </div>
 
         <div class="mt-8 border-t pt-4">
@@ -54,10 +49,6 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">{{ __('Dashboard') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('items.index')" :active="request()->routeIs('items.*')">{{ __('Inventory') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')">{{ __('Suppliers') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('purchase-orders.index')" :active="request()->routeIs('purchase-orders.*')">{{ __('Purchase Orders') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.*')">{{ __('Sales') }}</x-responsive-nav-link>
         </div>
 
         <div class="pt-4 pb-1 border-t border-gray-200">
