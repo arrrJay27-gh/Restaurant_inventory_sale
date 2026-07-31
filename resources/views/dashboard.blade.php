@@ -1,11 +1,9 @@
 @php
-use App\Models\Item;
+use App\Models\Ingredient;
 use App\Models\MenuItem;
-use App\Models\Sale;
-use App\Models\Supplier;
-use App\Models\WasteLog;
-use App\Models\PurchaseOrder;
+use App\Models\Order;
 
+<<<<<<< HEAD
 // Base metrics
 $totalItems = $totalItems ?? Item::count();
 $totalMenuItems = $totalMenuItems ?? MenuItem::count();
@@ -45,6 +43,16 @@ try {
 }
 
 $incomingStock = 0; 
+=======
+$totalItems = class_exists(Ingredient::class) ? Ingredient::count() : 0;
+$totalMenuItems = class_exists(MenuItem::class) ? MenuItem::count() : 0;
+$totalSales = class_exists(Order::class) ? Order::count() : 0;
+$totalSuppliers = 0;
+$totalWaste = 0;
+$lowStock = 0;
+$purchaseOrdersCount = 0;
+$totalRevenue = 0;
+>>>>>>> c618e7e87d6aeca9df063f1b4b738dba7c0ef86b
 @endphp
 
 <x-app-layout>
@@ -65,6 +73,7 @@ $incomingStock = 0;
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+<<<<<<< HEAD
             <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-2">
                 <!-- Sales Overview -->
                 <div class="rounded-xl bg-white border border-slate-200 p-6 shadow-sm">
@@ -123,11 +132,13 @@ $incomingStock = 0;
             </div>
 
             <!-- Counters Grid -->
+=======
+>>>>>>> c618e7e87d6aeca9df063f1b4b738dba7c0ef86b
             <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 <div class="rounded-xl bg-white border border-slate-200 p-6 shadow-sm">
-                    <p class="text-sm font-semibold text-slate-500">Total Inventory Items</p>
+                    <p class="text-sm font-semibold text-slate-500">Total Ingredients</p>
                     <p class="mt-4 text-4xl font-semibold text-slate-900">{{ $totalItems }}</p>
-                    <p class="mt-2 text-sm text-slate-500">Active raw ingredients and stock items.</p>
+                    <p class="mt-2 text-sm text-slate-500">Active raw ingredients.</p>
                 </div>
 
                 <div class="rounded-xl bg-white border border-slate-200 p-6 shadow-sm">
@@ -141,6 +152,7 @@ $incomingStock = 0;
                     <p class="mt-4 text-4xl font-semibold text-slate-900">{{ $totalSales }}</p>
                     <p class="mt-2 text-sm text-slate-500">Completed orders captured by POS.</p>
                 </div>
+<<<<<<< HEAD
 
                 <div class="rounded-xl bg-white border border-slate-200 p-6 shadow-sm">
                     <p class="text-sm font-semibold text-slate-500">Suppliers</p>
@@ -185,3 +197,9 @@ $incomingStock = 0;
         </div>
     </div>
 </x-app-layout>
+=======
+            </div>
+        </div>
+    </div>
+</x-app-layout>
+>>>>>>> c618e7e87d6aeca9df063f1b4b738dba7c0ef86b

@@ -1,49 +1,45 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ItemController;
-use App\Http\Controllers\PurchaseOrderController;
-use App\Http\Controllers\SaleController;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\WasteLogController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PosDashboardController;
+use App\Models\Ingredient;
+use App\Models\MenuItem;
+use App\Models\Order;
 use App\Http\Controllers\PosController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+Route::post('/pos/checkout', [PosController::class, 'checkout'])->name('pos.checkout');
 
-// Public / Landing Page
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Authenticated Routes Group
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::get('/dashboard', function () {
+    $totalItems = class_exists(Ingredient::class) ? Ingredient::count() : 0;
+    $totalMenuItems = class_exists(MenuItem::class) ? MenuItem::count() : 0;
+    $totalSales = class_exists(Order::class) ? Order::count() : DB::table('sales')->count();
+    $totalSuppliers = 0;
+    $totalWaste = 0;
+    $lowStock = class_exists(Ingredient::class) ? Ingredient::whereColumn('current_stock', '<', 'min_stock')->count() : 0;
+    
+    $totalRevenue = DB::getSchemaBuilder()->hasTable('sales') ? (DB::table('sales')->sum('total_amount') ?? 0) : 0;
 
-    // Main Dashboard Route
-    Route::get('/dashboard', function () {
-        $totalRevenue = DB::table('sales')->sum('total_amount') ?? 0;
-        $totalSales = DB::table('sales')->count();
+    return view('dashboard', compact(
+        'totalItems', 
+        'totalMenuItems', 
+        'totalSales', 
+        'totalSuppliers', 
+        'totalWaste', 
+        'lowStock',
+        'totalRevenue'
+    ));
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-        return view('dashboard', compact('totalRevenue', 'totalSales'));
-    })->name('dashboard');
-
-    // POS Routes
-    Route::get('/pos', [PosController::class, 'index'])->name('pos.index'); // <-- Idinagdag para sa Open POS Register
-    Route::get('/pos/dashboard', [PosDashboardController::class, 'index'])->name('pos.dashboard');
-
-    // Profile Management
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
 });
 
-// Authentication Routes (Breeze)
 require __DIR__.'/auth.php';
