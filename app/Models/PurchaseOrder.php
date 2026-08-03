@@ -2,21 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PurchaseOrder extends Model
 {
-    protected $fillable = ['po_number', 'supplier_id', 'status', 'total_amount'];
+    use HasFactory;
 
-    public function supplier(): BelongsTo
-    {
+    protected $fillable = ['supplier_id', 'po_number', 'total_amount', 'status', 'notes'];
+
+    public function supplier() {
         return $this->belongsTo(Supplier::class);
     }
 
-    public function items(): HasMany
-    {
-        return $this->hasMany(PurchaseOrderItem::class, 'po_id');
-    }
+    public function items() {
+    return $this->hasMany(PurchaseOrderItem::class, 'po_id');
+}
+
 }

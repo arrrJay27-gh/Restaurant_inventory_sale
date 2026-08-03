@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/items/{item}/adjust', [ItemController::class, 'updateStock'])->name('items.update-stock');
     Route::resource('suppliers', SupplierController::class);
     Route::get('/stocks', [ItemController::class, 'stockLogs'])->name('stocks.index');
+    Route::resource('purchase-orders', PurchaseOrderController::class)->names('purchase_orders');
+    
     Route::resource('items', ItemController::class);
 });
 

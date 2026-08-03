@@ -8,18 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('suppliers', function (Blueprint $table) {
-            $table->string('contact_person')->nullable()->after('name');
-            $table->string('email')->nullable()->after('contact_person');
-            $table->string('phone')->nullable()->after('email');
-            $table->text('address')->nullable()->after('phone');
+        Schema::create('stock_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('item_id')->constrained()->onDelete('cascade');
+            $table->string('type'); // 'IN', 'OUT', 'ADJUSTMENT'
+            $table->decimal('quantity', 10, 2);
+            $table->string('reason')->nullable();
+            $table->foreignId('user_id')->constrained();
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::table('suppliers', function (Blueprint $table) {
-            $table->dropColumn(['contact_person', 'email', 'phone', 'address']);
-        });
+        Schema::dropIfExists('stock_logs');
     }
 };

@@ -22,15 +22,13 @@ class StockLog extends Model
         'user_id'
     ];
 
-    // Establish link relationship back to the parent item
     public function item(): BelongsTo
-    {
-        return $table->belongsTo(Item::class, 'item_id');
-    }
+{
+    return $this->belongsTo(Item::class, 'item_id');
+}
 
-    // Establish link relationship back to the user who processed it
-    public function user(): BelongsTo
-    {
-        return $table->belongsTo(User::class, 'user_id');
-    }
+public function user(): BelongsTo
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
 }
