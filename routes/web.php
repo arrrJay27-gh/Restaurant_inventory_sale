@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/stocks', [ItemController::class, 'index'])->name('stocks.index');
 
 // FIXED: This now properly connects to your DashboardController
 Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -30,6 +31,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+     Route::get('/items/{item}/adjust', [ItemController::class, 'adjustStock'])->name('items.adjust-stock');
+    Route::patch('/items/{item}/adjust', [ItemController::class, 'updateStock'])->name('items.update-stock');
+    Route::resource('suppliers', SupplierController::class);
+    Route::get('/stocks', [ItemController::class, 'stockLogs'])->name('stocks.index');
     Route::resource('items', ItemController::class);
 });
 

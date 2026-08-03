@@ -11,8 +11,7 @@ class SupplierController extends Controller
 {
     public function index(): View
     {
-        $suppliers = Supplier::orderBy('name')->paginate(20);
-
+        $suppliers = Supplier::orderBy('name', 'asc')->paginate(15);
         return view('suppliers.index', compact('suppliers'));
     }
 
@@ -25,13 +24,14 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'contact_name' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:50',
+            'contact_person' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'address' => 'nullable|string|max:500',
         ]);
 
         Supplier::create($validated);
 
-        return redirect()->route('suppliers.index')->with('success', 'Supplier added successfully.');
+        return redirect()->route('suppliers.index')->with('success', 'Supplier registered successfully.');
     }
 }

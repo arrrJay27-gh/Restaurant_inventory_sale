@@ -31,6 +31,7 @@
                                     <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Min Stock</th>
                                     <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Cost/Unit</th>
                                     <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-100">
@@ -49,10 +50,15 @@
                                                 <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Healthy</span>
                                             @endif
                                         </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                                            <a href="{{ route('items.adjust-stock', $item->id) }}" class="text-blue-600 hover:text-blue-900 font-medium">
+                                                ⚙️ Adjust Stock
+                                            </a>
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="px-6 py-12 text-center text-sm text-gray-500">
+                                        <td colspan="8" class="px-6 py-12 text-center text-sm text-gray-500">
                                             No raw ingredients registered yet. Click "+ Add Ingredient" above to stock your tables!
                                         </td>
                                     </tr>

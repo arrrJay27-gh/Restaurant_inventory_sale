@@ -27,4 +27,9 @@ class Item extends Model
     {
         return $this->hasMany(WasteLog::class);
     }
+    public function stockLogs()
+{
+    return $this->hasMany(StockLog::class);
+}
+
 }
