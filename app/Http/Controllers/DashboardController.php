@@ -13,11 +13,13 @@ use App\Models\WasteLog;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index(): View
     {
+        // 1. Gather all individual metrics from the database
         $totalItems = Item::count();
         $totalMenuItems = MenuItem::count();
         $totalSales = Sale::count();
@@ -29,15 +31,17 @@ class DashboardController extends Controller
         $totalUsers = User::count();
         $stockValue = Item::sum(DB::raw('current_stock * cost_per_unit'));
         $pendingPurchaseOrders = PurchaseOrder::where('status', '!=', 'received')->count();
+        
         $incomingStock = PurchaseOrderItem::join('purchase_orders', 'po_items.po_id', '=', 'purchase_orders.id')
             ->where('purchase_orders.status', '!=', 'received')
             ->sum('quantity_ordered');
+
         $lowStockItems = Item::whereColumn('current_stock', '<', 'min_stock')
             ->orderBy('current_stock', 'asc')
             ->limit(5)
             ->get();
 
-        // monthly sales/purchases for chart (last 6 months)
+        // 2. Generate Chart Data (Last 6 Months)
         $chartLabels = [];
         $monthlySales = [];
         $monthlyPurchases = [];
@@ -45,15 +49,29 @@ class DashboardController extends Controller
         for ($i = 5; $i >= 0; $i--) {
             $start = Carbon::now()->subMonths($i)->startOfMonth();
             $end = (clone $start)->endOfMonth();
-            $chartLabels[] = $start->format('M');
 
+            $chartLabels[] = $start->format('M');
             $monthlySales[] = (float) Sale::whereBetween('created_at', [$start, $end])->sum('total_amount');
             $monthlyPurchases[] = (float) PurchaseOrder::whereBetween('created_at', [$start, $end])->sum('total_amount');
         }
 
+        // 3. Calculate financial breakdown
         $profit = $totalRevenue - $totalPurchaseCost;
 
+        // 4. Implement Option 2: Map variables directly into the $metrics object for Blade
+        $metrics = (object)[
+            'total_revenue'      => $totalRevenue,
+            'transactions_count' => $totalSales,
+            'total_cost'         => $totalPurchaseCost, 
+            'purchase_cost'      => $totalPurchaseCost,
+            'orders_count'       => PurchaseOrder::count(), // Total orders count
+            'pending_orders'     => $pendingPurchaseOrders,
+            'incoming_qty'       => $incomingStock,
+        ];
+
+        // 5. Single return statement passing everything your view needs
         return view('dashboard', compact(
+            'metrics',
             'totalItems',
             'totalMenuItems',
             'totalSales',

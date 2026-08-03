@@ -20,26 +20,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-use Illuminate\Support\Facades\DB;
-
-Route::get('/dashboard', function () {
-    // Kukunin ang kabuuang suma ng total_amount mula sa sales table. 
-    // Kung walang benta, gagawin itong 0.
-    $totalRevenue = DB::table('sales')->sum('total_amount') ?? 0;
-    
-    // Kukunin ang kabuuang bilang ng mga transaksyon sa sales table.
-    $totalSales = DB::table('sales')->count();
-
-    // Ipapasa ang mga variable papunta sa iyong dashboard blade file
-    return view('dashboard', compact('totalRevenue', 'totalSales'));
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+// FIXED: This now properly connects to your DashboardController
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // Secure User Account Profile Settings Management
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::resource('items', ItemController::class);
 });
 
 // CRITICAL: This line automatically handles all Login, Logout, and Register pages securely via Breeze!

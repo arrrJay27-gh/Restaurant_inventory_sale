@@ -66,61 +66,26 @@ $incomingStock = 0;
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
             <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-2">
+
+            
+
                 <!-- Sales Overview -->
-                <div class="rounded-xl bg-white border border-slate-200 p-6 shadow-sm">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <p class="text-sm font-semibold text-slate-500">Sales Overview</p>
-                            <p class="mt-4 text-3xl font-semibold text-slate-900">{{ number_format($totalRevenue, 2) }}</p>
-                            <p class="mt-2 text-sm text-slate-500">Total revenue</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm text-slate-500">Transactions</p>
-                            <p class="mt-2 text-2xl font-semibold text-slate-900">{{ $totalSales }}</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 grid gap-4 sm:grid-cols-2">
-                        <div class="rounded-2xl bg-slate-50 p-4">
-                            <p class="text-sm text-slate-500">Cost</p>
-                            <p class="mt-2 text-xl font-semibold text-slate-900">{{ number_format($totalPurchaseCost, 2) }}</p>
-                        </div>
-                        <div class="rounded-2xl bg-slate-50 p-4">
-                            <p class="text-sm text-slate-500">Profit</p>
-                            <p class="mt-2 text-xl font-semibold text-emerald-600">{{ number_format(($totalRevenue - $totalPurchaseCost), 2) }}</p>
-                        </div>
-                    </div>
-                    <div class="mt-6">
-                        <canvas id="salesChart" height="140"></canvas>
-                    </div>
+                <div class="sales-overview">
+                    <h3>Sales Overview</h3>
+                    <p>Total revenue: <strong>{{ number_format($metrics->total_revenue, 2) }}</strong></p>
+                    <p>Transactions: <strong>{{ $metrics->transactions_count }}</strong></p>
+                    <p>Cost: <strong>{{ number_format($metrics->total_cost, 2) }}</strong></p>
+                    <p>Profit: <strong>{{ number_format($metrics->total_revenue - $metrics->total_cost, 2) }}</strong></p>
                 </div>
 
-                <!-- Purchase Overview -->
-                <div class="rounded-xl bg-white border border-slate-200 p-6 shadow-sm">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <p class="text-sm font-semibold text-slate-500">Purchase Overview</p>
-                            <p class="mt-4 text-3xl font-semibold text-slate-900">{{ number_format($totalPurchaseCost, 2) }}</p>
-                            <p class="mt-2 text-sm text-slate-500">Total purchase cost</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm text-slate-500">Orders</p>
-                            <p class="mt-2 text-2xl font-semibold text-slate-900">{{ $purchaseOrdersCount }}</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-6 grid gap-4 sm:grid-cols-2">
-                        <div class="rounded-2xl bg-slate-50 p-4">
-                            <p class="text-sm text-slate-500">Pending</p>
-                            <p class="mt-2 text-xl font-semibold text-slate-900">{{ $pendingPurchaseOrders }}</p>
-                        </div>
-                        <div class="rounded-2xl bg-slate-50 p-4">
-                            <p class="text-sm text-slate-500">Incoming Qty</p>
-                            <p class="mt-2 text-xl font-semibold text-slate-900">{{ number_format($incomingStock, 2) }}</p>
-                        </div>
-                    </div>
+                <!-- Purchase Overview Section -->
+                <div class="purchase-overview">
+                    <h3>Purchase Overview</h3>
+                    <p>Total purchase cost: <strong>{{ number_format($metrics->purchase_cost, 2) }}</strong></p>
+                    <p>Orders: <strong>{{ $metrics->orders_count }}</strong></p>
+                    <p>Pending: <strong>{{ $metrics->pending_orders }}</strong></p>
+                    <p>Incoming Qty: <strong>{{ number_format($metrics->incoming_qty, 2) }}</strong></p>
                 </div>
-            </div>
 
             <!-- Counters Grid -->
             <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

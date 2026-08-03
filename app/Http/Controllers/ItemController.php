@@ -31,7 +31,6 @@ class ItemController extends Controller
             'current_stock' => 'required|numeric|min:0',
             'min_stock' => 'required|numeric|min:0',
             'cost_per_unit' => 'required|numeric|min:0',
-            'description' => 'nullable|string|max:1000',
         ]);
 
         Item::create($validated);
