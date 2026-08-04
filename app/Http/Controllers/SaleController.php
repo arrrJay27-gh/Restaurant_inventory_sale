@@ -13,20 +13,19 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class SaleController extends Controller
 {
     public function index(): View
     {
         $sales = Sale::with('user')->orderByDesc('created_at')->paginate(20);
-
         return view('sales.index', compact('sales'));
     }
 
     public function create(): View
     {
         $menuItems = MenuItem::where('is_active', true)->orderBy('name')->get();
-
         return view('sales.create', compact('menuItems'));
     }
 
@@ -40,6 +39,38 @@ class SaleController extends Controller
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.unit_price' => 'required|numeric|min:0',
         ]);
+
+        // --- PRE-TRANSACTION STOCK VALIDATION CHECK ---
+        $requiredIngredients = [];
+
+        // Aggregate total required quantities for each raw ingredient across all ordered items
+        foreach ($validated['items'] as $singleItem) {
+            $recipes = Recipe::where('menu_item_id', $singleItem['menu_item_id'])->get();
+            
+            foreach ($recipes as $recipe) {
+                if (!isset($requiredIngredients[$recipe->item_id])) {
+                    $requiredIngredients[$recipe->item_id] = [
+                        'name' => $recipe->item->name ?? 'Unknown Ingredient',
+                        'needed' => 0
+                    ];
+                }
+                $requiredIngredients[$recipe->item_id]['needed'] += $recipe->quantity_required * $singleItem['quantity'];
+            }
+        }
+
+        // Check availability against actual current stock
+        foreach ($requiredIngredients as $itemId => $data) {
+            $inventoryItem = Item::find($itemId);
+            
+            if (!$inventoryItem || $inventoryItem->current_stock < $data['needed']) {
+                $available = $inventoryItem ? $inventoryItem->current_stock : 0;
+                
+                throw ValidationException::withMessages([
+                    'items' => ["Insufficient inventory stock for '{$data['name']}'. Required: {$data['needed']}, Available: {$available}."]
+                ]);
+            }
+        }
+        // --- END OF VALIDATION CHECK ---
 
         DB::transaction(function () use ($validated) {
             $totalAmount = collect($validated['items'])->sum(function ($item) {
@@ -66,7 +97,17 @@ class SaleController extends Controller
                 $recipes = Recipe::where('menu_item_id', $singleItem['menu_item_id'])->get();
 
                 foreach ($recipes as $recipe) {
-                    Item::where('id', $recipe->item_id)->decrement('current_stock', $recipe->quantity_required * $singleItem['quantity']);
+                    $inventoryItem = Item::find($recipe->item_id);
+
+                    if ($inventoryItem) {
+                        $deductionAmount = $recipe->quantity_required * $singleItem['quantity'];
+                        
+                        $inventoryItem->decrement('current_stock', $deductionAmount);
+
+                        if (($inventoryItem->current_stock - $deductionAmount) <= 0) {
+                            \Log::warning("Inventory item ID {$inventoryItem->id} has dropped to zero or a negative value following Sale #{$sale->sale_number}.");
+                        }
+                    }
                 }
             }
         });

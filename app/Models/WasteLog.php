@@ -3,19 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WasteLog extends Model
 {
-    protected $fillable = ['item_id', 'quantity', 'reason', 'logged_by'];
+    protected $fillable = ['total_amount', 'user_id'];
 
-    public function item(): BelongsTo
+    public function items(): HasMany
     {
-        return $this->belongsTo(Item::class);
+        return $this->hasMany(WasteLogItem::class);
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'logged_by');
+        return $this->belongsTo(User::class);
     }
 }

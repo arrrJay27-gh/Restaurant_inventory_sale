@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\WasteLog;
+use App\Models\MenuItem;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -11,33 +12,45 @@ use Illuminate\Support\Facades\Auth;
 
 class WasteLogController extends Controller
 {
-    public function create(): View
+    public function create()
     {
-        $items = Item::orderBy('name')->get();
-
-        return view('waste_logs.create', compact('items'));
+        $menuItems = MenuItem::all();
+        return view('waste-logs.create', compact('menuItems'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        $validated = $request->validate([
-            'item_id' => 'required|exists:items,id',
-            'quantity' => 'required|numeric|min:0.001',
-            'reason' => 'required|string|max:500',
+        $request->validate([
+            'items' => 'required|array|min:1',
+            'items.*.menu_item_id' => 'required|exists:menu_items,id',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.unit_price' => 'required|numeric|min:0',
         ]);
 
-        WasteLog::create([
-            'item_id' => $validated['item_id'],
-            'quantity' => $validated['quantity'],
-            'reason' => $validated['reason'],
-            'logged_by' => Auth::id(),
-        ]);
+        DB::transaction(function () use ($request) {
+            $totalAmount = 0;
 
-        $item = Item::find($validated['item_id']);
-        if ($item) {
-            $item->decrement('current_stock', $validated['quantity']);
-        }
+            foreach ($request->items as $item) {
+                $totalAmount += $item['quantity'] * $item['unit_price'];
+            }
 
-        return redirect()->route('dashboard')->with('success', 'Waste logged and inventory updated successfully.');
+            $wasteLog = WasteLog::create([
+                'user_id' => auth()->id(),
+                'total_amount' => $totalAmount,
+            ]);
+
+            foreach ($request->items as $item) {
+                $subtotal = $item['quantity'] * $item['unit_price'];
+                
+                $wasteLog->items()->create([
+                    'menu_item_id' => $item['menu_item_id'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'subtotal' => $subtotal,
+                ]);
+            }
+        });
+
+        return redirect()->route('waste-logs.create')->with('success', 'Waste log recorded successfully.');
     }
 }
