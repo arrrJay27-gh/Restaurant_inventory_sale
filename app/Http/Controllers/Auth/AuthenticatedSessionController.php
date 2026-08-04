@@ -28,7 +28,21 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = Auth::user();
+
+        // 1. Linisin ang role string (tinatanggal ang spaces at underscores, ginagawang lowercase)
+        $cleanRole = strtolower(str_replace([' ', '_'], '', $user->role ?? ''));
+
+        // 2. Mga allowed roles para sa Admin / Staff Dashboard
+        $allowedDashboardRoles = ['admin', 'staff', 'manager', 'inventorymanager'];
+
+        // 3. Kung Admin / Staff / Inventory Manager, i-redirect sa Dashboard (o sa intended page nila)
+        if (in_array($cleanRole, $allowedDashboardRoles)) {
+            return redirect()->intended('/dashboard');
+        }
+
+        // 4. Lahat ng Customer / Regular Users ay didiretso sa POS ordering
+        return redirect()->intended('/pos');
     }
 
     /**
