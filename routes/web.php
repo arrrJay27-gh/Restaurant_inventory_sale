@@ -1,91 +1,47 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\InventoryController;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\StockController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\SalesController;
-use App\Http\Controllers\WasteLogController;
-use App\Models\Ingredient;
-use App\Models\MenuItem;
-use App\Models\Order;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
-// Root URL (127.0.0.1:8000)
-// Binago natin ito: Direktang pupunta sa landing page ('welcome')
-// kahit naka-login o naka-guest para hindi ka ma-lock sa /pos!
+// Root URL
 Route::get('/', function () {
-    return view('welcome'); // Siguraduhing 'welcome' ang pangalan ng landing page blade file mo
+    return view('welcome');
 })->name('home');
 
-// 1. ADMIN, STAFF & INVENTORY MANAGER EXCLUSIVE ROUTES (Sidebar Dashboard)
-Route::middleware(['auth', 'verified', 'role:admin,inventory_manager,staff,manager,inventory manager'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/dashboard', function () {
-        $totalItems = class_exists(Ingredient::class) ? Ingredient::count() : 0;
-        $totalMenuItems = class_exists(MenuItem::class) ? MenuItem::count() : 0;
-        $totalSales = class_exists(Order::class) ? Order::count() : 0;
-        $totalSuppliers = 0;
-        $totalWaste = 0;
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        $lowStock = 0;
-        if (class_exists(Ingredient::class)) {
-            try {
-                $lowStock = Ingredient::whereColumn('current_stock', '<', 'min_stock')->count();
-            } catch (\Exception $e) {
-                try {
-                    $lowStock = Ingredient::whereColumn('stock', '<', 'min_stock')->count();
-                } catch (\Exception $ex) {
-                    $lowStock = 0;
-                }
-            }
-        }
+    // 1. INVENTORY (Raw ingredients / Stocks lang)
+    Route::get('/inventory', [ItemController::class, 'index'])->name('inventory.index');
+    Route::resource('items', ItemController::class);
 
-        $totalRevenue = class_exists(Order::class) ? (Order::sum('total_amount') ?? 0) : 0;
+    // 2. MENU MANAGEMENT (Dito makikita ang mga BINEBENTANG PRODUCTS/MENU)
+    Route::get('/menu-management', [MenuController::class, 'index'])->name('menu.index');
 
-        return view('dashboard', compact(
-            'totalItems',
-            'totalMenuItems',
-            'totalSales',
-            'totalSuppliers',
-            'totalWaste',
-            'lowStock',
-            'totalRevenue'
-        ));
-    })->name('dashboard');
+    // ADMIN ONLY: Route para makapag-ADD ng BAGONG MENU / PRODUCT
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/menu-management/create', [MenuController::class, 'create'])->name('menu.create');
+        Route::post('/menu-management', [MenuController::class, 'store'])->name('menu.store');
+    });
 
-    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
-    Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
-    Route::get('/stocks', [StockController::class, 'index'])->name('stocks.index');
-    Route::get('/purchase-orders', [PurchaseOrderController::class, 'index'])->name('purchase-orders.index');
-    Route::get('/sales', [SalesController::class, 'index'])->name('sales.index');
-    Route::get('/waste-logs', [WasteLogController::class, 'index'])->name('waste-logs.index');
-});
-
-// 2. POS ROUTES
-Route::middleware('auth')->group(function () {
-    Route::get('/pos', function () {
-        $cleanRole = strtolower(str_replace([' ', '_'], '', Auth::user()->role ?? ''));
-
-        // Kung tinangka ng Admin/Staff na mag-open ng /pos -> Ibalik sa Dashboard!
-        if (in_array($cleanRole, ['admin', 'staff', 'manager', 'inventorymanager'])) {
-            return redirect()->route('dashboard');
-        }
-
-        return app(PosController::class)->index();
-    })->name('pos.index');
-
+    // 3. POS SCREEN (Order Processing / Cashier)
+    Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
     Route::post('/pos/checkout', [PosController::class, 'checkout'])->name('pos.checkout');
 
+    // Purchase Orders & Sales
+    Route::resource('purchase-orders', PurchaseOrderController::class)->except(['create', 'store']);
+    Route::get('/sales', [SalesController::class, 'index'])->name('sales.index');
+    Route::resource('sales', SalesController::class)->except(['index']);
+
+    // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

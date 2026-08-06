@@ -1,0 +1,20 @@
+[33m9a73eae[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mjulius[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33mdac7cea[m[33m ([m[1;31morigin/julius[m[33m)[m HEAD@{1}: commit: customer
+[33m9a73eae[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mjulius[m[33m)[m HEAD@{2}: checkout: moving from julius to julius
+[33m9a73eae[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mjulius[m[33m)[m HEAD@{3}: commit: pos
+[33m3544a6a[m HEAD@{4}: commit (merge): resolve dashboard conflict and fix metrics view
+[33mcef10e1[m HEAD@{5}: reset: moving to HEAD
+[33mcef10e1[m HEAD@{6}: rebase (abort): returning to refs/heads/julius
+[33m53c60e6[m HEAD@{7}: pull origin julius --rebase (pick): bago
+[33mc618e7e[m HEAD@{8}: pull origin julius --rebase (start): checkout c618e7e87d6aeca9df063f1b4b738dba7c0ef86b
+[33mcef10e1[m HEAD@{9}: commit: pos
+[33m2743edc[m HEAD@{10}: reset: moving to origin/main
+[33mc618e7e[m HEAD@{11}: reset: moving to HEAD
+[33mc618e7e[m HEAD@{12}: checkout: moving from main to julius
+[33m5480abb[m[33m ([m[1;32mmain[m[33m)[m HEAD@{13}: checkout: moving from julius to main
+[33mc618e7e[m HEAD@{14}: commit: pos
+[33m09af348[m HEAD@{15}: commit (merge): Resolved merge conflicts
+[33mf5ff599[m HEAD@{16}: commit: new
+[33m9f178b5[m HEAD@{17}: commit: create all tables
+[33m5480abb[m[33m ([m[1;32mmain[m[33m)[m HEAD@{18}: checkout: moving from main to julius
+[33m5480abb[m[33m ([m[1;32mmain[m[33m)[m HEAD@{19}: clone: from https://github.com/arrrJay27-gh/Restaurant_inventory_sale.git
